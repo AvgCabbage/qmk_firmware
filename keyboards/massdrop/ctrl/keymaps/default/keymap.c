@@ -1,5 +1,10 @@
 #include QMK_KEYBOARD_H
 
+#define _QWERTY 0
+#define _GAME 1
+#define _FUNC 2
+#define _FUNC2 3
+
 enum ctrl_keycodes {
     U_T_AUTO = SAFE_RANGE, //USB Extra Port Toggle Auto Detect / Always Active
     U_T_AGCR,              //USB Toggle Automatic GCR control
@@ -8,6 +13,22 @@ enum ctrl_keycodes {
     DBG_KBD,               //DEBUG Toggle Keyboard Prints
     DBG_MOU,               //DEBUG Toggle Mouse Prints
     MD_BOOT,               //Restart into bootloader after hold timeout
+	L_BRI = SAFE_RANGE, //LED Brightness Increase
+    L_BRD,              //LED Brightness Decrease
+    L_PTN,              //LED Pattern Select Next
+    L_PTP,              //LED Pattern Select Previous
+    L_PSI,              //LED Pattern Speed Increase
+    L_PSD,              //LED Pattern Speed Decrease
+    L_T_MD,             //LED Toggle Mode
+    L_T_ONF,            //LED Toggle On / Off
+    L_ON,               //LED On
+    L_OFF,              //LED Off
+    L_T_BR,             //LED Toggle Breath Effect
+    L_T_PTD,            //LED Toggle Scrolling Pattern Direction
+    WIN_LOCK,           //WIN+L
+    LY_STAT,           //LAYER Default Layer Status
+    LY_STD,            //LAYER Standard/Default Sayer
+    LY_GAME,           //LAYER Game layer. Standard + Media Controls
 };
 
 #define TG_NKRO MAGIC_TOGGLE_NKRO //Toggle 6KRO / NKRO mode
@@ -15,32 +36,43 @@ enum ctrl_keycodes {
 keymap_config_t keymap_config;
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-    [0] = LAYOUT(
-        KC_ESC,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,             KC_PSCR, KC_SLCK, KC_PAUS, \
+    [_QWERTY] = LAYOUT(
+        KC_ESC,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,             KC_PSCR, WIN_LOCK, KC_PAUS, \
         KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC,   KC_INS,  KC_HOME, KC_PGUP, \
         KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS,   KC_DEL,  KC_END,  KC_PGDN, \
         KC_CAPS, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT, KC_ENT, \
         KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,                              KC_UP, \
-        KC_LCTL, KC_LGUI, KC_LALT,                   KC_SPC,                             KC_RALT, MO(1),   KC_APP,  KC_RCTL,            KC_LEFT, KC_DOWN, KC_RGHT \
+        KC_LCTL, KC_LGUI, KC_LALT,                  KC_SPC,                              KC_RALT, KC_APP,  KC_FN0,  KC_RCTL,            KC_LEFT, KC_DOWN, KC_RGHT \
     ),
-    [1] = LAYOUT(
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,            KC_MUTE, _______, _______, \
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,   KC_MPLY, KC_MSTP, KC_VOLU, \
-        _______, RGB_SPD, RGB_VAI, RGB_SPI, RGB_HUI, RGB_SAI, _______, U_T_AUTO,U_T_AGCR,_______, _______, _______, _______, _______,   KC_MPRV, KC_MNXT, KC_VOLD, \
-        _______, RGB_RMOD,RGB_VAD, RGB_MOD, RGB_HUD, RGB_SAD, _______, _______, _______, _______, _______, _______, _______, \
-        _______, RGB_TOG, _______, _______, _______, MD_BOOT, TG_NKRO, _______, _______, _______, _______, _______,                              _______, \
-        _______, _______, _______,                   _______,                            _______, _______, _______, _______,            _______, _______, _______ \
+    [_GAME] = LAYOUT(
+        KC_ESC,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,             KC_PSCR, WIN_LOCK, KC_PAUS, \
+        KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC,   KC_MPLY, KC_MNXT, KC_VOLU, \
+        KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS,   KC_MUTE, KC_MPRV, KC_VOLD, \
+        KC_CAPS, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT, KC_ENT, \
+        KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,                              KC_UP, \
+        KC_LCTL, KC_LGUI, KC_LALT,                  KC_SPC,                              KC_RALT, KC_APP,  KC_FN1,  KC_RCTL,            KC_LEFT, KC_DOWN, KC_RGHT \
     ),
-    /*
-    [X] = LAYOUT(
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,            _______, _______, _______, \
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,   _______, _______, _______, \
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,   _______, _______, _______, \
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
-        _______, _______, _______, _______, _______, _______, TG_NKRO, _______, _______, _______, _______, _______,                              _______, \
-        _______, _______, _______,                   _______,                            _______, _______, _______, _______,            _______, _______, _______ \
+    [_FUNC] = LAYOUT(
+        LY_STAT, LY_STD,  LY_GAME, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,            KC_TRNS, KC_SLCK, KC_TRNS, \
+        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,   KC_MPLY, KC_MNXT, KC_VOLU, \
+        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, U_T_AUTO,U_T_AGCR,KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,   KC_MUTE, KC_MPRV, KC_VOLD, \
+        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, \
+        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, L_T_BR,  TG_NKRO, L_T_MD,  L_PTP,   L_PTN,   L_T_ONF, L_T_PTD,                              L_BRI, \
+        KC_TRNS, KC_TRNS, KC_TRNS,                  KC_TRNS,                             KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,            L_PSD,   L_BRD,   L_PSI \
     ),
-    */
+	[_FUNC2] = LAYOUT(
+	LY_STAT, LY_STD,  LY_GAME, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,            KC_TRNS, KC_SLCK, KC_TRNS, \
+	KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,   KC_INS,  KC_HOME, KC_PGUP, \
+	KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, U_T_AUTO,U_T_AGCR,KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,   KC_DEL,  KC_END,  KC_PGDN, \
+	KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, \
+	KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, L_T_BR,  TG_NKRO, L_T_MD,  L_PTP,   L_PTN,   L_T_ONF, L_T_PTD,                              L_BRI, \
+	KC_TRNS, KC_TRNS, KC_TRNS,                  KC_TRNS,                             KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,            L_PSD,   L_BRD,   L_PSI \
+    ),
+};
+
+const uint16_t PROGMEM fn_actions[] = {
+    [_QWERTY] = ACTION_LAYER_MOMENTARY(_FUNC),
+    [_GAME] = ACTION_LAYER_MOMENTARY(_FUNC2),
 };
 
 // Runs just one time when the keyboard initializes.
@@ -59,6 +91,126 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     static uint32_t key_timer;
 
     switch (keycode) {
+		
+		case LY_STAT:
+            if (record->event.pressed) {
+                if( default_layer_state == _QWERTY ) {
+                    //rgblight_setrgb_cyan();
+                    I2C3733_Control_Set(0);
+                    wait_ms(250);
+                    I2C3733_Control_Set(1);
+                }else if( default_layer_state == _GAME ) {
+                    //rgblight_setrgb_magenta();
+                    I2C3733_Control_Set(0);
+                    wait_ms(250);
+                    I2C3733_Control_Set(1);
+                    wait_ms(250);
+                    I2C3733_Control_Set(0);
+                    wait_ms(250);
+                    I2C3733_Control_Set(1);
+                }
+            }
+            return false;
+        case LY_STD:
+            if (record->event.pressed && default_layer_state == _GAME) {
+                default_layer_set(_QWERTY);
+                layer_move(_QWERTY);
+                layer_on(_QWERTY);
+                layer_off(_GAME);
+                //led_animation_id = 0;
+            }
+            return false;
+        case LY_GAME:
+            if (record->event.pressed && default_layer_state == _QWERTY) {
+                default_layer_set(_GAME);
+                layer_move(_GAME);
+                layer_on(_GAME);
+                layer_off(_QWERTY);
+                //led_animation_id = 1;
+
+            }
+            return false;
+        case WIN_LOCK:
+            if (record->event.pressed) {              
+                register_code(KC_MUTE);
+                send_string_with_delay_P(SS_LWIN("l"),5);
+            }
+		// case L_BRI:
+            // if (record->event.pressed) {
+                // if (LED_GCR_STEP > LED_GCR_MAX - gcr_desired) gcr_desired = LED_GCR_MAX;
+                // else gcr_desired += LED_GCR_STEP;
+                // if (led_animation_breathing) gcr_breathe = gcr_desired;
+            // }
+            // return false;
+        // case L_BRD:
+            // if (record->event.pressed) {
+                // if (LED_GCR_STEP > gcr_desired) gcr_desired = 0;
+                // else gcr_desired -= LED_GCR_STEP;
+                // if (led_animation_breathing) gcr_breathe = gcr_desired;
+            // }
+            // return false;
+        // case L_PTN:
+            // if (record->event.pressed) {
+                // if (led_animation_id == led_setups_count - 1) led_animation_id = 0;
+                // else led_animation_id++;
+            // }
+            // return false;
+        // case L_PTP:
+            // if (record->event.pressed) {
+                // if (led_animation_id == 0) led_animation_id = led_setups_count - 1;
+                // else led_animation_id--;
+            // }
+            // return false;
+        // case L_PSI:
+            // if (record->event.pressed) {
+                // led_animation_speed += ANIMATION_SPEED_STEP;
+            // }
+            // return false;
+        // case L_PSD:
+            // if (record->event.pressed) {
+                // led_animation_speed -= ANIMATION_SPEED_STEP;
+                // if (led_animation_speed < 0) led_animation_speed = 0;
+            // }
+            // return false;
+        // case L_T_MD:
+            // if (record->event.pressed) {
+                // led_lighting_mode++;
+                // if (led_lighting_mode > LED_MODE_MAX_INDEX) led_lighting_mode = LED_MODE_NORMAL;
+            // }
+            // return false;
+        // case L_T_ONF:
+            // if (record->event.pressed) {
+                // led_enabled = !led_enabled;
+                // I2C3733_Control_Set(led_enabled);
+            // }
+            // return false;
+        // case L_ON:
+            // if (record->event.pressed) {
+                // led_enabled = 1;
+                // I2C3733_Control_Set(led_enabled);
+            // }
+            // return false;
+        // case L_OFF:
+            // if (record->event.pressed) {
+                // led_enabled = 0;
+                // I2C3733_Control_Set(led_enabled);
+            // }
+            // return false;
+        // case L_T_BR:
+            // if (record->event.pressed) {
+                // led_animation_breathing = !led_animation_breathing;
+                // if (led_animation_breathing) {
+                    // gcr_breathe = gcr_desired;
+                    // led_animation_breathe_cur = BREATHE_MIN_STEP;
+                    // breathe_dir = 1;
+                // }
+            // }
+            // return false;
+        // case L_T_PTD:
+            // if (record->event.pressed) {
+                // led_animation_direction = !led_animation_direction;
+            // }
+/////////////////////////////////////////////////////////////////////////////////////////////////////
         case U_T_AUTO:
             if (record->event.pressed && MODS_SHIFT && MODS_CTRL) {
                 TOGGLE_FLAG_AND_PRINT(usb_extra_manual, "USB extra port manual mode");
